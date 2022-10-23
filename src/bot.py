@@ -1,43 +1,32 @@
-from typing import Union
-from constants import (EVENT_NONE,
-                       EVENT_LOGIN,
-                       EVENT_LOGOUT,
-                       EVENT_PRODUCTS,
-                       EVENT_PRODUCT_DETAILS,
-                       EVENT_PURCHASE,
-                       EVENT_PURCHASE_SUCCESS,
-                       EVENT_PURCHASE_FAIL)
-from event import (Login,
-                   Logout,
-                   Products,
-                   ProductDetails,
-                   Purchase,
-                   PurchaseSuccess,
-                   PurchaseFail,
-                   get_random_event,
-                   OrderData, EventData)
+from src.constants import (EVENT_NONE,
+                           EVENT_LOGIN,
+                           EVENT_LOGOUT,
+                           EVENT_PRODUCTS,
+                           EVENT_PRODUCT_DETAILS,
+                           EVENT_PURCHASE,
+                           EVENT_PURCHASE_SUCCESS,
+                           EVENT_PURCHASE_FAIL,
+                           get_event_name)
+from src.event import (EventRunner,
+                       get_random_event,
+                       EventData)
 
 
 class Bot:
     def __init__(self):
-        self.event_objs = [Login(),
-                           Logout(),
-                           Products(),
-                           ProductDetails(),
-                           Purchase(),
-                           PurchaseSuccess(),
-                           PurchaseFail()]
         self.current_state = EVENT_NONE
-        self.event_data = EventData()
+        self.event_data = None
+        self.event_runner = EventRunner()
 
     def set_event_state(self, state: int):
         self.current_state = state
 
-    def run_event_step(self, state: int, event_data: dict):
-        current_event = self.event_objs[state]
+    def run_event_step(self, state: int):
         self.event_data.set_new_event(state)
-        self.set_event_state(current_event.get_event())
-        current_event.run_event(data=self.event_data.to_dict())
+        self.set_event_state(state)
+        print(f"current event : {state}\t{get_event_name(state)}")
+        resp = self.event_runner.run_event(data=self.event_data.to_dict())
+        print(resp.json())
 
     def run(self):
         """
@@ -87,9 +76,11 @@ class Bot:
                                                      weights=[90, 10]))
 
 
-# for scenario flow test in local - only show text by event step, not request
+# for scenario flow test in local or debug - only show text by event step, not request
 class TestBot(Bot):
     def run_event_step(self, state: int):
-        current_event = self.event_objs[state]
-        self.set_event_state(current_event.get_event())
-        current_event.event_info()
+        # state = EVENT_PURCHASE
+        # super().run_event_step(state)
+        self.set_event_state(state)
+        print(f"current event : {state}\t{get_event_name(state)}")
+

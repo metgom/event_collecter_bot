@@ -1,3 +1,4 @@
+import configparser
 from typing import Final
 
 """
@@ -27,6 +28,10 @@ _EVENT_NAME = ["log_in",
                "purchase",
                "purchase_success",
                "purchase_fail"]
+
+server_config = configparser.ConfigParser()
+server_config.read('./config/config.ini')
+server_default_config = server_config['DEFAULT']
 
 
 def get_event_name(flag: int):
