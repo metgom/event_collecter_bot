@@ -1,3 +1,4 @@
+import time
 from src.constants import (EVENT_NONE,
                            EVENT_LOGIN,
                            EVENT_LOGOUT,
@@ -6,7 +7,8 @@ from src.constants import (EVENT_NONE,
                            EVENT_PURCHASE,
                            EVENT_PURCHASE_SUCCESS,
                            EVENT_PURCHASE_FAIL,
-                           get_event_name)
+                           get_event_name,
+                           server_default_config)
 from src.event import (EventRunner,
                        get_random_event,
                        EventData)
@@ -27,6 +29,7 @@ class Bot:
         print(f"current event : {state}\t{get_event_name(state)}")
         resp = self.event_runner.run_event(data=self.event_data.to_dict())
         print(resp.json())
+        time.sleep(0.05)
 
     def run(self):
         """
@@ -41,7 +44,7 @@ class Bot:
         """
         # 0: 베이스 데이터 생성 - user id
         self.event_data = EventData()
-        self.event_data.create_random_user_id()
+        self.event_data.create_random_user_id(server_default_config["BOT_BASE_ID"])
         # 1: 로그인
         self.run_event_step(EVENT_LOGIN)
         # 2

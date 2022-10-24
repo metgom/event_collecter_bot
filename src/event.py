@@ -81,19 +81,22 @@ class EventData(Data):
             if self.order is None:
                 self.order = OrderData()
             self.order.set_random_data()
-        else:
-            if self.order is not None:
-                self.order = None
 
     def set_new_event(self, event_flag: int):
         event_name = get_event_name(event_flag)
         if self.event == event_name:
             raise Exception(f"Same Event - {event_name}")
-        if event_flag >= EVENT_PURCHASE:
+        if event_flag == EVENT_PURCHASE:
             # need order
             self.set_random_data(event_flag=event_flag, create_order=True)
         else:
             self.set_random_data(event_flag=event_flag, create_order=False)
+            if event_flag < EVENT_PURCHASE:
+                self.remove_order()
+
+    def remove_order(self):
+        if self.order is not None:
+            self.order = None
 
     def to_dict(self):
         event_data = {
