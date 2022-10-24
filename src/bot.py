@@ -24,16 +24,27 @@ class Bot:
         self.current_state = state
 
     def run_event_step(self, state: int):
+        # run event by step
         self.event_data.set_new_event(state)
         self.set_event_state(state)
         print(f"current event : {state}\t{get_event_name(state)}")
         resp = self.event_runner.run_event(data=self.event_data.to_dict())
         print(resp.json())
-        time.sleep(0.05)
+        time.sleep(0.01)
+
+    def bot_init(self):
+        # data set None + create user id
+        if self.event_data is None:
+            self.event_data = EventData()
+        else:
+            self.event_data.event_reset()
+        self.event_data.create_random_user_id(server_default_config["BOT_BASE_ID"],
+                                              int(server_default_config["BOT_NAME_SUFFIX_MAX_NUMBER"]))
 
     def run(self):
         """
         시나리오
+        0 데이터 폼 생성 + 초기화
         1 로그인
         2 상품목록
         3 상품상세 or 로그아웃
@@ -42,10 +53,9 @@ class Bot:
         6-1 성공 : 3 or 로그아웃(낮음)
         6-2 실패 : 3 or 로그아웃(높음)
         """
-        # 0: 베이스 데이터 생성 - user id
-        self.event_data = EventData()
-        self.event_data.create_random_user_id(server_default_config["BOT_BASE_ID"])
-        # 1: 로그인
+        # 0: initialize event data
+        self.bot_init()
+        # 1
         self.run_event_step(EVENT_LOGIN)
         # 2
         self.run_event_step(EVENT_PRODUCTS)

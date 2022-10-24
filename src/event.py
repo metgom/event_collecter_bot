@@ -60,16 +60,23 @@ class EventData(Data):
         self.event = event
         self.order = order
 
-    def create_random_user_id(self, base_name: Union[str, None] = None):
+    def event_reset(self):
+        self.event = None
+        self.event_id = None
+        self.user_id = None
+        self.remove_order()
+
+    def create_random_user_id(self, base_name: Union[str, None] = None, suffix_max_number: int = 10):
         if base_name is None or len(base_name) == 0:
             base_name = 'user'
-        # create user id - "base_name1", "base_name2", ... , "base_name9"
-        self.user_id = base_name+str(random.randint(1, 10))
+        # create user id - "base_name1", "base_name2", ... , "base_name{suffix_max_number}"
+        self.user_id = base_name+str(random.randint(1, suffix_max_number))
         return
 
     def set_random_data(self, event_flag: int = EVENT_NONE, create_order: bool = False):
         if self.user_id is None:
-            self.create_random_user_id(server_default_config["BOT_BASE_ID"])
+            self.create_random_user_id(server_default_config["BOT_BASE_ID"],
+                                       int(server_default_config["BOT_NAME_SUFFIX_MAX_NUMBER"]))
 
         if event_flag != EVENT_NONE:
             self.event_id = get_guid()
