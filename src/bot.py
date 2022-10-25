@@ -87,13 +87,3 @@ class Bot:
                 self.run_event_step(get_random_event(EVENT_LOGOUT,
                                                      EVENT_PRODUCTS,
                                                      weights=[90, 10]))
-
-
-# for scenario flow test in local or debug - only show text by event step, not request
-class TestBot(Bot):
-    def run_event_step(self, state: int):
-        # state = EVENT_PURCHASE
-        # super().run_event_step(state)
-        self.set_event_state(state)
-        print(f"current event : {state}\t{get_event_name(state)}")
-
