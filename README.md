@@ -44,10 +44,10 @@ EC2PORT = 8080
 EVENT_COLLECT_ROUTE = api/collect
 
 > ;"BOT_BASE_ID" + "0 ~ BOT_NAME_SUFFIX_MAX_NUMBER" 의 형태로 사용자 아이디를 생성합니다. 기본값은 user 입니다.  
-BOT_BASE_ID = test
+BOT_BASE_ID = tester
 
 > ;사용자 아이디 뒤의 넘버링 최대값입니다. 기본값은 10 입니다.  
 BOT_NAME_SUFFIX_MAX_NUMBER = 10
 
 > ;봇을 실행할 횟수입니다.  
-BOT_LOOP_COUNT = 10
+BOT_LOOP_COUNT = 100
